@@ -15,7 +15,6 @@
             "sourceMaps": true,
             "envFile": "${workspaceFolder}/.env.local",
             "env": {
-                "NODE_ENV": "local",
                 "APP_PORT": "3002",
                 "APP_LOG": "debug,error,log",
                 "DB_CONN_URI": "mongodb://localhost:27017/c-chain?authSource=admin"
