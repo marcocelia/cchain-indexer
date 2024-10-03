@@ -1,0 +1,32 @@
+version: '3'
+services:
+  process-indexer:
+    container_name: process-indexer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - DB_CONN_URI=mongodb://mongo:27017/c-chain
+    depends_on:
+      - mongo
+    networks:
+      - process-indexer-network
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - '28017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - process-indexer-network
+
+networks:
+  process-indexer-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
