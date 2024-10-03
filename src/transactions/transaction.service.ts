@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TransactionDoc } from './transaction.model';
 import { TransactionRepository } from './transaction.repository';
-import { from } from 'rxjs';
 
 @Injectable()
 export class TransactionService {
@@ -12,13 +11,19 @@ export class TransactionService {
     }
 
     findAllSentOrReceived(address: string): Promise<TransactionDoc[]> {
-        return this.transactionRepository.findAllFiltered({
-            $or: [
-                {
-                    to: address,
-                },
-                { from: address },
-            ],
-        });
+        return this.transactionRepository.findAllFiltered(
+            {
+                $or: [
+                    {
+                        to: address,
+                    },
+                    { from: address },
+                ],
+            },
+            {
+                blockNumber: 1,
+                transactionIndex: 1,
+            },
+        );
     }
 }
