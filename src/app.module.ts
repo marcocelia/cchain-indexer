@@ -5,8 +5,7 @@ import { ContractStreamerModule } from './contract-streamer/contract-streamer.mo
 import { ConfigModule } from '@nestjs/config';
 import { ConfigLoader } from './config/config.loader';
 import { AppLoggerModule } from './app-logger/app-logger.module';
-import { DatabaseModule } from './database/database.module';
-
+import { TransactionsModule } from './transactions/transaction.module';
 @Module({
     imports: [
         AppLoggerModule,
@@ -15,7 +14,7 @@ import { DatabaseModule } from './database/database.module';
             load: [ConfigLoader],
         }),
         ContractStreamerModule,
-        DatabaseModule,
+        TransactionsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
