@@ -3,6 +3,7 @@ import { Interval } from '@nestjs/schedule';
 import { Web3 } from 'web3';
 import { AppLogger } from '../app-logger/app-logger';
 import { TransactionRepository } from '../transactions/transaction.repository';
+import { TransactionDoc } from '../transactions/transaction.model';
 
 @Injectable()
 export class ContractStreamer {
@@ -20,11 +21,19 @@ export class ContractStreamer {
         try {
             const latestBlock = await this.web3.eth.getBlockNumber();
             const block = await this.web3.eth.getBlock(latestBlock, true);
-            block.transactions.forEach((transaction) => {
-                this.transactionRepository.create(transaction);
-            });
+            const created = await Promise.all(
+                block.transactions.map(async (transaction): Promise<TransactionDoc | undefined> => {
+                    try {
+                        return await this.transactionRepository.create(transaction);
+                    } catch (error) {
+                        this.logger.error(`while crearing transaction: ${error.message}`);
+                        return undefined;
+                    }
+                }),
+            );
+            this.logger.log(`created ${created.length} new transactions`);
         } catch (error) {
-            this.logger.error('Errore durante il polling del blocco:', error);
+            this.logger.error(`while polling transactions: ${error.message}`);
         }
     }
 }
