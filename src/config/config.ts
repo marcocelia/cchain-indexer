@@ -8,6 +8,11 @@ export interface AppConfig {
     logLevels: LogLevel[];
 }
 
+export interface DBConfig {
+    connectionUri: string;
+}
+
 export interface Config {
     application: AppConfig;
+    dbConfig: DBConfig;
 }

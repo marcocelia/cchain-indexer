@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigLoader } from './config/config.loader';
 import { AppLoggerModule } from './app-logger/app-logger.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { AppLoggerModule } from './app-logger/app-logger.module';
             isGlobal: true,
             load: [ConfigLoader],
         }),
+        DatabaseModule,
     ],
     controllers: [AppController],
     providers: [AppService],

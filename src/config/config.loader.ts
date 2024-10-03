@@ -12,5 +12,8 @@ export const ConfigLoader = (): Config => {
                 ? process.env.APP_LOG.split(',').map((l) => l.trim() as LogLevel)
                 : ['error', 'log'],
         },
+        dbConfig: {
+            connectionUri: process.env.DB_CONN_URI,
+        },
     };
 };
