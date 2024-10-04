@@ -10,4 +10,16 @@ export class TransactionController {
     findAll(@Query('address') address: string) {
         return this.service.findAllSentOrReceived(address).then((models) => models.map(fromTransactionModelToDto));
     }
+
+    @Get('rank')
+    ranked() {
+        return this.service
+            .findAll(undefined, { value: 'desc' })
+            .then((models) => models.map(fromTransactionModelToDto));
+    }
+
+    @Get('count')
+    countAll(@Query('address') address: string) {
+        return this.service.countSentOrReceived(address);
+    }
 }

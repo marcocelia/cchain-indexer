@@ -1,23 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { TransactionDoc } from './transaction.model';
 import { TransactionRepository } from './transaction.repository';
+import { Filter, Sort } from '../shared/filer.query';
 
 @Injectable()
 export class TransactionService {
     constructor(private readonly transactionRepository: TransactionRepository) {}
 
-    findAll(): Promise<TransactionDoc[]> {
-        return this.transactionRepository.findAll();
+    findAll(filter?: Filter, sort?: Sort): Promise<TransactionDoc[]> {
+        return this.transactionRepository.findAllFiltered(filter, sort);
     }
 
     findAllSentOrReceived(address: string): Promise<TransactionDoc[]> {
         return this.transactionRepository.findAllFiltered(
             {
-                $or: [
+                or: [
                     {
                         to: address,
                     },
-                    { from: address },
+                    {
+                        from: address,
+                    },
                 ],
             },
             {
@@ -25,5 +28,9 @@ export class TransactionService {
                 transactionIndex: 1,
             },
         );
+    }
+
+    countSentOrReceived(address: string): Promise<number> {
+        return this.findAllSentOrReceived(address).then((transactions) => transactions.length);
     }
 }

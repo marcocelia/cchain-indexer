@@ -1,4 +1,4 @@
-export class TransactionDto {
+export interface TransactionDto {
     readonly blockHash: string;
     readonly blockNumber: string;
     readonly from: string;
