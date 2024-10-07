@@ -33,4 +33,8 @@ export class TransactionService {
     countSentOrReceived(address: string): Promise<number> {
         return this.findAllSentOrReceived(address).then((transactions) => transactions.length);
     }
+
+    topAddresses(): Promise<{ address: string; balance: string }[]> {
+        return this.transactionRepository.topAddresses();
+    }
 }

@@ -24,4 +24,60 @@ export class TransactionRepository {
     create(doc: TransactionDoc): Promise<TransactionDoc> {
         return this.transactionDao.create(doc);
     }
+
+    topAddresses(): Promise<{ address: string; balance: string }[]> {
+        return this.transactionDao
+            .aggregate<{ address: string; balance: number }>([
+                {
+                    $facet: {
+                        incomes: [
+                            {
+                                $group: {
+                                    _id: '$from',
+                                    balance: { $sum: '$value' },
+                                },
+                            },
+                        ],
+                        outcomes: [
+                            {
+                                $group: {
+                                    _id: '$to',
+                                    balance: { $sum: { $multiply: ['$value', -1] } },
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    $project: {
+                        balances: { $setUnion: ['$incomes', '$outcomes'] },
+                    },
+                },
+                {
+                    $unwind: '$balances',
+                },
+                {
+                    $group: {
+                        _id: '$balances._id',
+                        balance: { $sum: '$balances.balance' },
+                    },
+                },
+                {
+                    $sort: { balance: -1 },
+                },
+                {
+                    $project: { _id: 0, address: '$_id', balance: 1 },
+                },
+                {
+                    $limit: 100,
+                },
+            ])
+            .exec()
+            .then((docs) =>
+                docs.map((doc) => ({
+                    ...doc,
+                    balance: doc.balance?.toString(),
+                })),
+            );
+    }
 }

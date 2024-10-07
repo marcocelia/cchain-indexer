@@ -8,7 +8,7 @@ export const fromTransactionModelToDto = (model: TransactionDoc): TransactionDto
     hash: model.hash,
     transactionIndex: model.transactionIndex?.toString(),
     to: model.to,
-    value: model.value,
+    value: model.value?.toString(),
     gas: model.gas?.toString(),
     gasPrice: model.gasPrice?.toString(),
     type: model.type?.toString(),

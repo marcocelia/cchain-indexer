@@ -25,7 +25,7 @@ export class TransactionDoc extends Document {
     to: string;
 
     @Prop({ required: true })
-    value: string;
+    value: mongoose.Schema.Types.BigInt;
 
     @Prop({ required: true })
     gas: mongoose.Schema.Types.BigInt;

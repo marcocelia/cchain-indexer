@@ -22,4 +22,9 @@ export class TransactionController {
     countAll(@Query('address') address: string) {
         return this.service.countSentOrReceived(address);
     }
+
+    @Get('topaddressess')
+    topAddresses() {
+        return this.service.topAddresses();
+    }
 }
